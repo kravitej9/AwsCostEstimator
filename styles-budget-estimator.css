@@ -1,146 +1,218 @@
-"rds" : {
-    "instancetype" : {
-        "name" : "db.m5large(2 vcpus,8gib)",
-        "price"  : "$67.68"
-      },
-     "databaseengine" : {
-        "name" : "oracle",
-        "price" : "0"
-     },
-     "storage" :
-     {
-        "name" : "gp2,100gb",
-        "price": "$11.5"
-     },
-     "backup-storage" :
-     {
-        "name" : "7 day retention",
-        "price" : "$2.33"
-     },
-     "data transfer" : {
-        "name" : "100gb outbound",
-        "price" : "$10"
-     }
-},
-"KMS" : {
-    "ckms" : {
-        "name" : "5 keys",
-        "price"  : "$5"
-      },
-     "encryption" : {
-        "name" : "1000 requests",
-        "price" : "$ 0.03"
-     },
-     "decryption" :
-     {
-        "name" : "1000 requests",
-        "price": "$0.03"
-     }
-},
-"lambda" : {
-    "no of requests" : {
-        "name" : "1000000",
-        "price"  : "$0"
-      },
-     "execution time" : {
-        "name" : "100ms",
-        "price" : "$0"
-     },
-     "memory" :
-     {
-        "name" : "128gb",
-        "price": "$0"
-     }
-},
-"back up vault" : {
-    "cold storage" : {
-        "name" : "500gb",
-        "price"  : "$10"
-      },
-     "warm storage" : {
-        "name" : "200gb",
-        "price" : "$5"
-     },
-     "retrival" :
-     {
-        "name" : "50gb",
-        "price": "$1"
-     }
-},
-"ec2 instance" : {
-    "instancetype" : {
-        "name" : "t2.micro",
-        "price"  : "$7.792"
-      }
-},
-"ebs": {
-    "size" : {
-        "name" : "gp3(50gb)",
-        "price"  : "$4"
-      }
-},
-"cloudwatch" : {
-    "log data ingestion" : {
-        "name" : "50GB",
-        "price"  : "$25"
-      },
-     "log data storage" : {
-        "name" : "100GB",
-        "price" : "$3"
-     }
-},
-"secrets-manager" : {
-    "secrets stored" : {
-        "name" : "10",
-        "price"  : "$4"
-      },
-     "API Requests" : {
-        "name" : "100,000",
-        "price" : "$0.5"
-     },
-},
-"s3" : {
-    "standard" : {
-        "name" : "50gb",
-        "price"  : "$3.2"
-      },
-     "GET requests" : {
-        "name" : "1000",
-        "price" : "$0.4"
-     },
-     "PUT requests" :
-     {
-        "name" : "1000",
-        "price": "$5"
-     }
-},
-"ALB" : {
-    "fixed cost" : {
-        "name" : "fixed",
-        "price"  : "$16.2"
-      },
-     "data transfer out" : {
-        "name" : "100GB",
-        "price" : "$8.91"
-     },
-},
-"NLB" : {
-    "fixed cost" : {
-        "name" : "fixed",
-        "price"  : "$16.2"
-      },
-     "data transfer out" : {
-        "name" : "100GB",
-        "price" : "$9"
-     },
-},
-"ECS" : {
-    "EC2 instance" : {
-        "name" : "2(t2.micro)",
-        "price"  : "$16.7"
-      },
-     "data transfer" : {
-        "name" : "100GB",
-        "price" : "$9"
-     },
+/* General styles for Budget Estimator page */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 0;
+}
+
+.menu-container {
+    background: linear-gradient(to bottom, #ff6bcb, #0d6efd); /* Pink to Blue gradient */
+    color: white;
+    width: 250px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    overflow-y: auto;
+}
+
+.menu {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.menu > li {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.menu > li > a {
+    display: block;
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+    padding: 15px 20px;
+    transition: background-color 0.3s ease, padding-left 0.3s ease;
+}
+
+.menu > li > a:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    padding-left: 30px;
+}
+
+.submenu {
+    display: none;
+    background: linear-gradient(to bottom, #ff6bcb, #0d6efd); /* Pink to Blue gradient */
+    padding: 0;
+}
+
+.menu > li:hover .submenu {
+    display: block;
+}
+
+.submenu > li {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.submenu > li > a {
+    display: block;
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+    padding: 12px 30px;
+    transition: background-color 0.3s ease, padding-left 0.3s ease;
+}
+
+.submenu > li > a:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    padding-left: 40px;
+}
+
+main {
+    margin-left: 270px; /* Adjust according to menu width */
+    padding: 20px;
+}
+
+.dashboard {
+    max-width: 800px;
+    margin: 20px auto;
+    background-color: white;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.content {
+    padding: 20px;
+}
+
+.step {
+    margin-bottom: 20px;
+}
+
+h1, h2 {
+    color: #333;
+}
+
+label {
+    display: block;
+    margin-bottom: 10px;
+}
+
+
+input[type="number"],
+select {
+    width: 100%;
+    padding: 8px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+#budgetSummary {
+    margin-top: 20px;
+    display: none; /* Hidden by default */
+    padding: 10px;
+    border: 1px solid #ccc;
+    background-color: #f9f9f9;
+}
+
+#selectedApplicationType {
+    background-color: #ffc107; /* Yellow background */
+    color: #333;
+    padding: 10px;
+    margin-bottom: 20px;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Styles for mobileQuestions */
+#mobileQuestions {
+    display: none; /* Initially hide the mobileQuestions section */
+}
+
+#mobileQuestions .question {
+    margin-bottom: 20px;
+}
+
+#mobileQuestions label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+#mobileQuestions input[type="number"],
+#mobileQuestions select {
+    width: 100%;
+    padding: 8px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+#mobileQuestions input[type="number"] {
+    width: 50%; /* Adjust width as needed */
+}
+
+#mobileQuestions select {
+    width: 100%; /* Adjust width as needed */
+}
+
+
+#summaryText {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+}
+
+.question {
+    margin-bottom: 20px;
+}
+
+.question label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.question input[type="text"],
+.question input[type="number"],
+.question select {
+    width: 100%;
+    padding: 8px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.question {
+    margin-bottom: 10px;
+}
+
+.question label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.question input,
+.question select {
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
 }

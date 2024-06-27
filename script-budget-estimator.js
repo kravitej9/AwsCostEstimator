@@ -7,23 +7,146 @@ document.addEventListener("DOMContentLoaded", function() {
 
 const awsComponentPricing = {
     "rds": {
-            "instanceType": {
-                "name": "db.m5.large(2 vcpus, 8gib)",
-                "price": 67.68
-            },
-            "databaseengine": {
-                "name": "oracle",
-                "price": 0
-            }
+    "instancetype": {
+        "name": "db.m5large(2vcpus,8gib)",
+        "price": "67.68"
     },
-    "ecs": {
-        "instancename": "ECS",
-        "price": 22
+    "databaseengine": {
+        "name": "oracle",
+        "price": "0"
     },
-    "s3": {
-        "instancename": "S3",
-        "price": 100
+    "storage": {
+        "name": "gp2,100gb",
+        "price": "11.5"
+    },
+    "backup-storage": {
+        "name": "7dayretention",
+        "price": "2.33"
+    },
+    "datatransfer": {
+        "name": "100gboutbound",
+        "price": "10"
     }
+},
+"KMS": {
+    "ckms": {
+        "name": "5keys",
+        "price": "5"
+    },
+    "encryption": {
+        "name": "1000requests",
+        "price": "0.03"
+    },
+    "decryption": {
+        "name": "1000requests",
+        "price": "0.03"
+    }
+},
+"lambda": {
+    "noofrequests": {
+        "name": "1000000",
+        "price": "0"
+    },
+    "executiontime": {
+        "name": "100ms",
+        "price": "0"
+    },
+    "memory": {
+        "name": "128gb",
+        "price": "0"
+    }
+},
+"backupvault": {
+    "coldstorage": {
+        "name": "500gb",
+        "price": "10"
+    },
+    "warmstorage": {
+        "name": "200gb",
+        "price": "5"
+    },
+    "retrival": {
+        "name": "50gb",
+        "price": "1"
+    }
+},
+"ec2instance": {
+    "instancetype": {
+        "name": "t2.micro",
+        "price": "7.792"
+    }
+},
+"ebs": {
+    "size": {
+        "name": "gp3(50gb)",
+        "price": "4"
+    }
+},
+"cloudwatch": {
+    "logdataingestion": {
+        "name": "50GB",
+        "price": "25"
+    },
+    "logdatastorage": {
+        "name": "100GB",
+        "price": "3"
+    }
+},
+"secrets-manager": {
+    "secretsstored": {
+        "name": "10",
+        "price": "4"
+    },
+    "APIRequests": {
+        "name": "100,000",
+        "price": "0.5"
+    },
+},
+"s3": {
+    "standard": {
+        "name": "50gb",
+        "price": "3.2"
+    },
+    "GETrequests": {
+        "name": "1000",
+        "price": "0.4"
+    },
+    "PUTrequests": {
+        "name": "1000",
+        "price": "5"
+    }
+},
+"ALB": {
+    "fixedcost": {
+        "name": "fixed",
+        "price": "16.2"
+    },
+    "datatransferout": {
+        "name": "100GB",
+        "price": "8.91"
+    },
+},
+"NLB": {
+    "fixedcost": {
+        "name": "fixed",
+        "price": "16.2"
+    },
+    "datatransferout": {
+        "name": "100GB",
+        "price": "9"
+    },
+},
+"ECS": {
+    "EC2instance": {
+        "name": "2(t2.micro)",
+        "price": "16.7"
+    },
+    "datatransfer": {
+        "name": "100GB",
+        "price": "9"
+    },
+}
+
 };
 
 function showQuestions() {
@@ -75,8 +198,8 @@ function calculateEstimate() {
             summaryText += `S3 Storage: ${s3StorageAmount} GB, Access Frequency: ${s3AccessFrequency}\n`;
         }
         if (document.querySelector("#componentRDS").checked) {
-            const rdsInstanceName = awsComponentPricing["rds"]["instanceType"].name;
-            const rdsPrice = awsComponentPricing["rds"]["instanceType"].price;
+            const rdsInstanceName = awsComponentPricing["rds"]["instancetype"].name;
+            const rdsPrice = Number(awsComponentPricing["rds"]["instancetype"].price);
             estimate += rdsPrice; // Adding RDS price to the estimate
             summaryText += `RDS Instance: ${rdsInstanceName}, Price: $${rdsPrice}\n`;
         }
