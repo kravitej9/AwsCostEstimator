@@ -25,7 +25,7 @@
                 <!-- Add more submenu items for Cost Estimator as needed -->
             </ul>
         </li>
-        <li><a href="index.html"> Budget Estimator</a></li>
+        <li><a href="BudgetEstimator.html">Budget Estimator</a></li>
         <!-- Add more main menu items as needed -->
     </ul>
 </nav>
@@ -46,5 +46,21 @@
         <p>This is the content for the Budget Estimator section.</p>
     </section>
 </main>
+
+<script>
+    function redirectToBudgetEstimator() {
+        // Check if the user has AWS knowledge or not (example logic)
+        var hasAWSKnowledge = confirm("Do you have AWS knowledge?");
+
+        if (hasAWSKnowledge) {
+            // Redirect to the BudgetEstimator.html for users with AWS knowledge
+            window.location.href = "BudgetEstimator.html";
+        } else {
+            // Redirect to a beginner guide or new user page
+            window.location.href = "Beginner.html";
+        }
+    }
+</script>
+
 </body>
 </html>
