@@ -1,11 +1,6 @@
 document.addEventListener("DOMContentLoaded", function() {
-    document.querySelector("#applicationType").addEventListener("change", showQuestions);
-    document.querySelectorAll('input[name="awsComponents"]').forEach(componentCheckbox => {
-        componentCheckbox.addEventListener("change", showComponentQuestions);
-    });
-});
 
-const awsComponentPricing = {
+const awsComponents = {
     "rds": {
     "instancetype": {
         "name": "db.m5large(2vcpus,8gib)",
@@ -149,74 +144,224 @@ const awsComponentPricing = {
 
 };
 
-function showQuestions() {
+
+    function showQuestions() {
+        const appType = document.getElementById('applicationType').value;
+        const additionalQuestions = document.getElementById('additionalQuestions');
+        additionalQuestions.innerHTML = '';
+
+        if (appType === "web") {
+            additionalQuestions.innerHTML = `
+                <div class="question">
+                    <label for="traffic">Expected Monthly Traffic Volume:</label>
+                    <select id="traffic" name="traffic">
+                                            <option value="low">Low</option>
+                                            <option value="medium">Medium</option>
+                                            <option value="high">High</option>
+                                        </select>
+                </div>
+                <div class="question">
+                    <label for="complex">Deployment Complexity:</label>
+                    <select id="complex" name="complex">
+                                            <option value="low">Low</option>
+                                            <option value="medium">Medium</option>
+                                            <option value="high">High</option>
+                                        </select>
+                </div>
+                <div class="question">
+                    <label for="scaling">Scaling Requirements:</label>
+                    <select id="scaling" name="scaling">
+                        <option value="horizontal">Horizontal</option>
+                        <option value="vertical">Vertical</option>
+                    </select>
+                </div>
+                <div class="question">
+                    <label for="performance">Performance Requirements:</label>
+                    <select id="performance" name="performance">
+                        <option value="low">Low Latency</option>
+                        <option value="high">High Latency</option>
+                    </select>
+                </div>
+                <div class="question">
+                    <label for="availability">Availability Requirements:</label>
+                    <select id="availability" name="availability">
+                        <option value="low">Low Availability</option>
+                        <option value="high">High Availability</option>
+                    </select>
+                </div>
+                <div class="question">
+                    <label for="security">Security Requirements:</label>
+                    <select id="security" name="security">
+                        <option value="third">Third Party</option>
+                        <option value="open">Open Source</option>
+                    </select>
+                </div>
+                <div class="question">
+                    <label for="integrate">Integration Requirements:</label>
+                    <select id="integrate" name="integrate">
+                        <option value="low">Low Security</option>
+                        <option value="high">High Security</option>
+                    </select>
+                </div>
+                <div class="question">
+                    <label for="compliance">Compliance Requirements:</label>
+                    <select id="compliance" name="compliance">
+                        <option value="low">Low compliance</option>
+                        <option value="high">High compliance</option>
+                    </select>
+                </div>
+                <div class="question">
+                    <label for="geo">Geographical Distribution:</label>
+                    <select id="geo" name="geo">
+                        <option value="global">Global</option>
+                        <option value="region">Region</option>
+                    </select>
+                </div>
+                <div class="question">
+                    <label for="maintain">Maintenance Requirements:</label>
+                    <select id="maintain" name="maintain">
+                        <option value="manage">Managed</option>
+                        <option value="region">Region</option>
+                    </select>
+                </div>
+                <div class="question">
+                    <label for="cdn">Do you need a Content Delivery Network (CDN)?</label>
+                    <select id="cdn" name="cdn">
+                        <option value="yes">Yes</option>
+                        <option value="no">No</option>
+                    </select>
+                </div>
+            `;
+
+        } else if (appType === "mobile") {
+            additionalQuestions.innerHTML = `
+                <div class="question">
+                    <label for="numberOfUsers">Estimated Number of Users:</label>
+                    <input type="number" id="numberOfUsers" name="numberOfUsers" min="1" required>
+                </div>
+                <div class="question">
+                    <label for="monthlyDataTransfer">Monthly Data Transfer (GB):</label>
+                    <input type="number" id="monthlyDataTransfer" name="monthlyDataTransfer" min="1" required>
+                </div>
+                <div class="question">
+                    <label for="pushNotifications">Use of Push Notifications:</label>
+                    <select id="pushNotifications" name="pushNotifications">
+                        <option value="yes">Yes</option>
+                        <option value="no">No</option>
+                    </select>
+                </div>
+                <div class="question">
+                    <label for="platform">Platform:</label>
+                    <select id="platform" name="platform">
+                        <option value="ios">iOS</option>
+                        <option value="android">Android</option>
+                        <option value="both">Both</option>
+                    </select>
+                </div>
+            `;
+        } else if (appType === "backend") {
+            additionalQuestions.innerHTML = `
+                <div class="question">
+                    <label for="numApiCalls">Expected Number of API Calls per Month:</label>
+                    <input type="number" id="numApiCalls" name="numApiCalls" min="1" required>
+                </div>
+                <div class="question">
+                    <label for="dataStorageBackend">Expected Data Storage (in GB):</label>
+                    <input type="number" id="dataStorageBackend" name="dataStorageBackend" min="1" required>
+                </div>
+                <div class="question">
+                    <label for="dbUsage">Do you need a Database?</label>
+                    <select id="dbUsage" name="dbUsage">
+                        <option value="yes">Yes</option>
+                        <option value="no">No</option>
+                    </select>
+                </div>
+                <div class="question">
+                    <label for="caching">Do you need Caching?</label>
+                    <select id="caching" name="caching">
+                        <option value="yes">Yes</option>
+                        <option value="no">No</option>
+                    </select>
+                </div>
+            `;
+        }
+
+        document.getElementById('step2').style.display = 'block';
+    }
+
+    function showComponentSelection() {
+    const suggestedPattern = document.getElementById('suggestedPattern');
+        suggestedPattern.style.display = 'block';
+        suggestedPattern.innerHTML = `Suggested Pattern : EC2 Pattern (NLB-->ALB-->EC2)`;
+        const additionalQuestions = document.getElementById('additionalQuestions').children;
+        let allAnswered = true;
+        for (let question of additionalQuestions) {
+            if (question.querySelector('input, select').value === '') {
+                allAnswered = false;
+                break;
+            }
+        }
+
+        if (allAnswered) {
+            document.getElementById('step3').style.display = 'block';
+        } else {
+            alert("Please answer all the questions before proceeding.");
+        }
+    }
+
+    function showComponentQuestions() {
+    document.getElementById(componentId).style.display = 'block';
+        const selectedComponents = document.querySelectorAll('input[name="awsComponents"]:checked');
+        const componentQuestions = document.getElementById('componentQuestions');
+        componentQuestions.style.display = 'block';
+        selectedComponents.forEach(component => {
+            const componentId = component.value + 'Questions';
+            document.getElementById(componentId).style.display = 'block';
+        });
+    }
+
+    function calculateEstimate() {
     const applicationType = document.querySelector("#applicationType").value;
-    document.querySelectorAll('.step').forEach(step => step.style.display = 'none');
-    document.querySelector("#step1").style.display = 'block';
-    document.querySelector("#selectedApplicationType").innerText = `Selected Application Type: ${applicationType}`;
-    document.querySelector("#selectedApplicationType").style.display = 'block';
+        const selectedComponents = document.querySelectorAll('input[name="awsComponents"]:checked');
+//        const summaryText = document.getElementById('summaryText');
+//        summaryText.innerHTML = 'Calculating...';
+//        const summaryAddCom = document.getElementById('summaryAddCom');
+        let totalEstimate = 30;
+ let summaryText = `Application Type: ${applicationType}\n`;
 
-    if (applicationType === "web") {
-        document.querySelector("#componentSelection").style.display = 'block';
-    } else if (applicationType === "mobile") {
-        document.querySelector("#mobileQuestions").style.display = 'block';
-    }
-}
+        selectedComponents.forEach(component => {
+            const componentKey = component.value;
+            const componentInfo = awsComponents[componentKey];
 
-function showComponentQuestions() {
-    document.querySelector("#componentQuestions").style.display = 'block';
-    document.querySelectorAll('.component-question').forEach(question => question.style.display = 'none');
+            let componentEstimate = componentInfo.price;
+            if (componentKey === 'ec2') {
+                const instanceCount = document.getElementById('ec2InstanceCount').value;
+                componentEstimate *= instanceCount;
+            } else if (componentKey === 's3') {
+                const storageAmount = document.getElementById('s3StorageAmount').value;
+                componentEstimate *= storageAmount;
+            } else if (componentKey === 'rds') {
+//                const instanceCount = document.getElementById('rdsInstanceCount').value;
+                const rdsInstanceName = awsComponents["rds"]["instancetype"].name;
+                const rdsPrice = Number(awsComponents["rds"]["instancetype"].price);
+                totalEstimate += rdsPrice; // Adding RDS price to the estimate
+                summaryText += `RDS Instance: ${rdsInstanceName}, Price: $${rdsPrice}\n`;
+//                componentEstimate *= instanceCount;
+            } else if (componentKey === 'lambda') {
+                const invocationCount = document.getElementById('lambdaInvocationCount').value;
+                const executionTime = document.getElementById('lambdaExecutionTime').value;
+                componentEstimate *= invocationCount * (executionTime / 1000);
+            }
 
-    if (document.querySelector("#componentEC2").checked) {
-        document.querySelector("#ec2Questions").style.display = 'block';
-    }
-    if (document.querySelector("#componentS3").checked) {
-        document.querySelector("#s3Questions").style.display = 'block';
-    }
-    if (document.querySelector("#componentRDS").checked) {
-        document.querySelector("#rdsQuestions").style.display = 'block';
-    }
-    // Add more conditions for other components
-}
+//            totalEstimate += componentEstimate;
+        });
+        document.getElementById('budgetSummary').style.display = 'block';
+        document.querySelector("#summaryText").innerText = `${summaryText} Estimated Budget: $${totalEstimate.toFixed(2)}`;
 
-function calculateEstimate() {
-    const applicationType = document.querySelector("#applicationType").value;
-    let estimate = 0;
-    let summaryText = `Application Type: ${applicationType}\n`;
-
-    if (applicationType === "web") {
-        if (document.querySelector("#componentEC2").checked) {
-            const ec2InstanceType = document.querySelector("#ec2InstanceType").value;
-            const ec2InstanceCount = parseInt(document.querySelector("#ec2InstanceCount").value);
-            estimate += ec2InstanceCount * 50; // Example calculation
-            summaryText += `EC2 Instance Type: ${ec2InstanceType}, Count: ${ec2InstanceCount}\n`;
-        }
-        if (document.querySelector("#componentS3").checked) {
-            const s3StorageAmount = parseInt(document.querySelector("#s3StorageAmount").value);
-            const s3AccessFrequency = document.querySelector("#s3AccessFrequency").value;
-            estimate += s3StorageAmount * (s3AccessFrequency === "frequent" ? 0.023 : 0.0125); // Example calculation
-            summaryText += `S3 Storage: ${s3StorageAmount} GB, Access Frequency: ${s3AccessFrequency}\n`;
-        }
-        if (document.querySelector("#componentRDS").checked) {
-            const rdsInstanceName = awsComponentPricing["rds"]["instancetype"].name;
-            const rdsPrice = Number(awsComponentPricing["rds"]["instancetype"].price);
-            estimate += rdsPrice; // Adding RDS price to the estimate
-            summaryText += `RDS Instance: ${rdsInstanceName}, Price: $${rdsPrice}\n`;
-        }
-        // Add more calculations for other components
-    } else if (applicationType === "mobile") {
-        const numberOfUsers = parseInt(document.querySelector("#numberOfUsers").value);
-        const monthlyDataTransfer = parseInt(document.querySelector("#monthlyDataTransfer").value);
-        const pushNotifications = document.querySelector("#pushNotifications").value;
-        const platform = document.querySelector("#platform").value;
-
-        estimate += numberOfUsers * 0.01 + monthlyDataTransfer * 0.02; // Example calculation
-        if (pushNotifications === "yes") {
-            estimate += numberOfUsers * 0.005; // Example calculation
-        }
-        summaryText += `Number of Users: ${numberOfUsers}, Monthly Data Transfer: ${monthlyDataTransfer} GB, Push Notifications: ${pushNotifications}, Platform: ${platform}\n`;
     }
 
-    document.querySelector("#budgetSummary").style.display = 'block';
-    document.querySelector("#summaryText").innerText = `${summaryText}Estimated Monthly Cost: $${estimate.toFixed(2)}`;
-}
+    window.showQuestions = showQuestions;
+    window.showComponentSelection = showComponentSelection;
+    window.showComponentQuestions = showComponentQuestions;
+    window.calculateEstimate = calculateEstimate;
+});

@@ -42,37 +42,38 @@
                     <select id="applicationType" name="applicationType" onchange="showQuestions()">
                         <option value="">Select...</option>
                         <option value="web">Web Application</option>
-                        <option value="mobile">Mobile Application</option>
-                        <option value="backend">Backend Services</option>
+                        <option value="co">Container Orchestration</option>
+                        <option value="dp">Data Processing</option>
+                        <option value="ml">Machine Learning</option>
+                        <option value="bda">Big Data Analytics</option>
+                        <option value="mp">Media Processing</option>
                     </select>
                 </label>
             </div>
 
             <div id="selectedApplicationType" style="display:none;"></div>
-
-            <!-- AWS Component Selection -->
-            <div id="componentSelection" class="step" style="display:none;">
-                <h2>Select AWS Components</h2>
+            <div class="step" id="step2" style="display:none;">
+                <h2>Step 2: Answer Additional Questions</h2>
+                <div id="additionalQuestions"></div>
+                <button type="button" onclick="showComponentSelection()">Next</button>
+            </div>
+            <h2 id="suggestedPattern" style="display:none;"></h2>
+            <div id="step3" style="display:none;">
+                <h3>Select Additional AWS Components If needed</h3>
                 <div class="question">
-                    <label>AWS Components:</label>
-                    <div>
-                        <input type="checkbox" id="componentEC2" name="awsComponents" value="ec2" onclick="showComponentQuestions()">
-                        <label for="componentEC2">EC2</label>
+                    <label for="awsComponents">AWS Components:</label>
+                    <div id="awsComponents">
+<!--                        <input type="checkbox" id="ec2" name="awsComponents" value="ec2">-->
+<!--                        <label for="ec2">EC2</label><br>-->
+                        <input type="checkbox" id="s3" name="awsComponents" value="s3">
+                        <label for="s3">S3</label><br>
+                        <input type="checkbox" id="rds" name="awsComponents" value="rds">
+                        <label for="rds">RDS</label><br>
+                        <input type="checkbox" id="lambda" name="awsComponents" value="lambda">
+                        <label for="lambda">Lambda</label><br>
                     </div>
-                    <div>
-                        <input type="checkbox" id="componentS3" name="awsComponents" value="s3" onclick="showComponentQuestions()">
-                        <label for="componentS3">S3</label>
-                    </div>
-                    <div>
-                        <input type="checkbox" id="componentRDS" name="awsComponents" value="rds" onclick="showComponentQuestions()">
-                        <label for="componentRDS">RDS</label>
-                    </div>
-                    <div>
-                        <input type="checkbox" id="componentLambda" name="awsComponents" value="lambda" onclick="showComponentQuestions()">
-                        <label for="componentLambda">Lambda</label>
-                    </div>
-                    <!-- Add more components as needed -->
                 </div>
+<!--                <button type="button" onclick="showComponentQuestions()">Next</button>-->
             </div>
 
             <!-- AWS Component Specific Questions -->
@@ -114,37 +115,19 @@
                         <input type="number" id="rdsInstanceCount" name="rdsInstanceCount" min="1" required>
                     </div>
                 </div>
-                <!-- Add more component specific questions as needed -->
-            </div>
-            <!-- Add more sections for Mobile Application and Backend Services as needed -->
-            <!-- Mobile Application-specific questions -->
-            <div id="mobileQuestions" class="step" style="display:none;">
-                <h2>Mobile Application Questions</h2>
-                <div class="question">
-                    <label for="numberOfUsers">Estimated Number of Users:</label>
-                    <input type="number" id="numberOfUsers" name="numberOfUsers" min="1" required>
-                </div>
-                <div class="question">
-                    <label for="monthlyDataTransfer">Monthly Data Transfer (GB):</label>
-                    <input type="number" id="monthlyDataTransfer" name="monthlyDataTransfer" min="1" required>
-                </div>
-                <div class="question">
-                    <label for="pushNotifications">Use of Push Notifications:</label>
-                    <select id="pushNotifications" name="pushNotifications">
-                        <option value="yes">Yes</option>
-                        <option value="no">No</option>
-                    </select>
-                </div>
-                <div class="question">
-                    <label for="platform">Platform:</label>
-                    <select id="platform" name="platform">
-                        <option value="iOS">iOS</option>
-                        <option value="Android">Android</option>
-                        <option value="React Native">React Native</option>
-                        <option value="Flutter">Flutter</option>
-                    </select>
+                <!-- Lambda Questions -->
+                <div id="lambdaQuestions" class="component-question" style="display:none;">
+                    <div class="question">
+                        <label for="lambdaInvocationCount">Monthly Invocations:</label>
+                        <input type="number" id="lambdaInvocationCount" name="lambdaInvocationCount" min="1" required>
+                    </div>
+                    <div class="question">
+                        <label for="lambdaExecutionTime">Average Execution Time (ms):</label>
+                        <input type="number" id="lambdaExecutionTime" name="lambdaExecutionTime" min="1" required>
+                    </div>
                 </div>
             </div>
+
 
             <button type="button" onclick="calculateEstimate()">Calculate Estimate</button>
         </form>
